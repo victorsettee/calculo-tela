@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#17649a">
+<meta name="description" content="Cálculo preliminar de iluminação para telas tensionadas, com distribuição das passadas e lateralização das fontes.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Cálculo de Tela">
@@ -16,7 +17,7 @@ header{background:#fff;border-bottom:3px solid var(--blue);padding:18px max(16px
 .brand{font-weight:800;letter-spacing:.02em;font-size:18px}.sub{font-size:12px;color:var(--muted);margin-top:3px}
 main{max-width:1050px;margin:auto;padding:16px;display:grid;gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 2px 8px #162c3b08}
 h2{font-size:17px;margin:0 0 12px}h3{font-size:14px;margin:0 0 8px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:5px}.field label{font-size:12px;color:var(--muted);font-weight:700}input,select{width:100%;padding:11px 12px;border:1px solid #bac7d2;border-radius:10px;font:inherit;background:#fff;color:var(--ink);min-width:0}
-button{border:0;border-radius:11px;padding:12px 14px;font:700 14px system-ui;cursor:pointer}.primary{background:var(--blue);color:#fff}.secondary{background:#e6eef5;color:#17486a}.danger{background:#fff0ee;color:#9a2d20}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.metric{border:1px solid var(--line);border-radius:12px;padding:12px}.metric .label{font-size:11px;color:var(--muted)}.metric .value{font-size:21px;font-weight:800;color:var(--blue);margin-top:3px}.small{font-size:12px;color:var(--muted)}.notice{padding:11px 12px;border-radius:10px;background:var(--warn);font-size:13px}.success{background:var(--ok)}.hidden{display:none}table{border-collapse:collapse;width:100%;font-size:13px}td,th{text-align:left;padding:9px 7px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-weight:700}.drawing{width:100%;overflow:hidden}.drawing svg{width:100%;height:auto;display:block}.project-item{padding:10px 0;border-bottom:1px solid var(--line);display:flex;gap:10px;justify-content:space-between;align-items:center}.project-item:last-child{border:0}.pill{display:inline-block;background:#e6eef5;color:#17486a;border-radius:999px;padding:3px 8px;font-size:11px;font-weight:700}.footer{font-size:11px;color:var(--muted);text-align:center;padding:10px}
+button{border:0;border-radius:11px;padding:12px 14px;font:700 14px system-ui;cursor:pointer}.primary{background:var(--blue);color:#fff}.secondary{background:#e6eef5;color:#17486a}.danger{background:#fff0ee;color:#9a2d20}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.metric{border:1px solid var(--line);border-radius:12px;padding:12px}.metric .label{font-size:11px;color:var(--muted)}.metric .value{font-size:21px;font-weight:800;color:var(--blue);margin-top:3px}.small{font-size:12px;color:var(--muted)}.notice{padding:11px 12px;border-radius:10px;background:var(--warn);font-size:13px}.success{background:var(--ok)}.hidden{display:none}table{border-collapse:collapse;width:100%;font-size:13px}td,th{text-align:left;padding:9px 7px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-weight:700}.drawing{width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#fff;padding:8px}.drawing svg{width:100%;min-width:520px;height:auto;display:block}.drawing-title{margin:16px 0 8px}.technical-note{font-size:12px;color:var(--muted);margin:8px 0 0}.project-item{padding:10px 0;border-bottom:1px solid var(--line);display:flex;gap:10px;justify-content:space-between;align-items:center}.project-item:last-child{border:0}.pill{display:inline-block;background:#e6eef5;color:#17486a;border-radius:999px;padding:3px 8px;font-size:11px;font-weight:700}.footer{font-size:11px;color:var(--muted);text-align:center;padding:10px}
 @media(min-width:800px){main{grid-template-columns:390px 1fr;align-items:start}.left{display:grid;gap:14px}.right{display:grid;gap:14px}.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:420px){.grid{grid-template-columns:1fr}.metric .value{font-size:19px}}
 @media print{header,.left,.actions,.footer,.no-print{display:none!important}body{background:white}main{display:block;padding:0;max-width:none}.card{box-shadow:none;break-inside:avoid;margin-bottom:12px}.right{display:block}.drawing svg{max-height:65vh}}
@@ -31,12 +32,12 @@ button{border:0;border-radius:11px;padding:12px 14px;font:700 14px system-ui;cur
     <div class="grid">
       <div class="field"><label for="client">Cliente / projeto</label><input id="client" placeholder="Ex.: Marçal"></div>
       <div class="field"><label for="depth">Profundidade (cm)</label><input id="depth" type="number" min="1" step="0.1" value="15"></div>
-      <div class="field"><label for="length">Comprimento (m)</label><input id="length" type="number" min="0.01" step="0.01" value="2.80"></div>
-      <div class="field"><label for="width">Largura (m)</label><input id="width" type="number" min="0.01" step="0.01" value="1.00"></div>
-      <div class="field"><label for="model">Modelo / marca da fita</label><input id="model" value="Studioluce ULTRALINE 240 FT2337"></div>
+      <div class="field"><label for="length">Comprimento (m)</label><input id="length" type="number" min="0.01" step="0.01" value="2.20"></div>
+      <div class="field"><label for="width">Largura (m)</label><input id="width" type="number" min="0.01" step="0.01" value="1.10"></div>
+      <div class="field"><label for="model">Modelo / marca da fita</label><input id="model" value="Studioluce FT2337"></div>
       <div class="field"><label for="voltage">Tensão</label><select id="voltage"><option value="24">24 V DC</option><option value="12">12 V DC</option></select></div>
       <div class="field"><label for="wpm">Consumo (W/m)</label><input id="wpm" type="number" min="0.1" step="0.1" value="20"></div>
-      <div class="field"><label for="lpm">Fluxo luminoso (lm/m)</label><input id="lpm" type="number" min="0" step="1" value="2100"></div>
+      <div class="field"><label for="lpm">Fluxo luminoso (lm/m)</label><input id="lpm" type="number" min="0" step="1" value="0"></div>
       <div class="field"><label for="roll">Comprimento do rolo (m)</label><input id="roll" type="number" min="0.1" step="0.1" value="5"></div>
       <div class="field"><label for="reserve">Reserva da fonte (%)</label><input id="reserve" type="number" min="0" max="100" step="1" value="25"></div>
       <div class="field"><label for="peripheral">Fita periférica</label><select id="peripheral"><option value="no">Não, somente geral</option><option value="yes">Sim — adicionar metragem</option></select></div>
@@ -108,18 +109,22 @@ function calculate(){
  const candidateRatings=[100,150,200,250,300,350,400,500,600,750,1000];
  let sourceGroups=[];
  if(perim===0){
-   const maxLoadPerSource=design;
+   // Escolhe a menor potência nominal de fonte e, dentro dela, a menor quantidade de fontes que suporta a carga com reserva.
    let chosen=null;
-   for(const rating of candidateRatings){
-     for(let groups=1;groups<=n;groups++){
-       const perGroup=Math.ceil(n/groups)*passW*(1+a.reserve/100);
-       if(perGroup<=rating){chosen={rating,groups,perGroup};break}
-     }
-     if(chosen)break;
+   for(let groups=1;groups<=n;groups++){
+     const perGroup=Math.ceil(n/groups)*passW*(1+a.reserve/100);
+     const rating=candidateRatings.find(value=>perGroup<=value);
+     if(rating){chosen={rating,groups};break}
    }
    if(chosen){
-     let remain=n;
-     for(let i=0;i<chosen.groups;i++){const count=Math.min(Math.ceil(n/chosen.groups),remain);sourceGroups.push({count,watts:count*passW,design:count*passW*(1+a.reserve/100),rating:chosen.rating});remain-=count;}
+     const base=Math.floor(n/chosen.groups), extra=n%chosen.groups;
+     let nextPass=1;
+     for(let i=0;i<chosen.groups;i++){
+       const count=base+(i<extra?1:0), passIndices=Array.from({length:count},(_,j)=>nextPass+j);
+       const watts=count*passW;
+       sourceGroups.push({count,passIndices,watts,design:watts*(1+a.reserve/100),rating:chosen.rating,voltage:a.voltage,current:watts/a.voltage,designCurrent:watts*(1+a.reserve/100)/a.voltage});
+       nextPass+=count;
+     }
    }
  }
  const warnings=[];
@@ -127,7 +132,8 @@ function calculate(){
  if(raw[raw.length-1] > short-.05+1e-8)warnings.push('A distribuição baseada no recuo de referência não cabe na largura; confirme a regra geométrica.');
  warnings.push('A quantidade de passadas é calculada automaticamente pela profundidade e pela largura útil; confirme o critério executivo Lumi Frame para geometrias especiais.');
  warnings.push(`Pontos de alimentação estimados pela regra operacional (${maxRun} m por trecho em ${a.voltage} V); confirmar limites reais da fita e topologia de cabos.`);
- warnings.push('Queda de tensão, bitola/comprimento dos cabos, proteção, temperatura, ventilação e capacidade contínua das fontes não foram validados.');
+ warnings.push('A fonte candidata considera a potência da fita informada e a reserva escolhida; ainda é necessário confirmar um modelo comercial de 24 V DC com potência contínua suficiente.');
+ warnings.push('Queda de tensão, bitola/comprimento dos cabos, proteção, temperatura, ventilação e limites reais de alimentação por fabricante não foram validados.');
  if(perim>0)warnings.push('A metragem periférica foi adicionada como valor informado; seu consumo pode diferir do consumo da fita geral. Informe modelo e potência próprios para um cálculo correto.');
  last={...a,long,short,spacing,n,positions,setback,passLen,general,perim,total,installed,design,current,feedPoints,pointsPerPass,passW,sourceGroups,warnings,created:new Date().toISOString()};
  render(last);
@@ -140,14 +146,22 @@ function render(r){
   ['Área da tela',fmt(r.length*r.width)+' m²'],['Fluxo teórico',fmt(r.total*r.lpm)+' lm'],['Pontos de alimentação estimados',r.feedPoints]
  ];
  $('metrics').innerHTML=metrics.map(x=>`<div class="metric"><div class="label">${x[0]}</div><div class="value">${x[1]}</div></div>`).join('');
- const x0=70,y0=44,w=280,h=Math.max(100,Math.min(210,r.short/r.long*280)), n=r.n;
- let lines='';
- for(let i=0;i<n;i++){let yy=y0+(r.positions[i]/r.short)*h;lines+=`<line x1="${x0}" y1="${yy}" x2="${x0+w}" y2="${yy}" stroke="#17649a" stroke-width="2"/>`;}
- $('drawing').innerHTML=`<h3 style="margin-top:16px">Desenho técnico — vista superior</h3><svg viewBox="0 0 430 ${y0+h+64}" role="img" aria-label="Desenho técnico com passadas e cotas"><rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="white" stroke="#17649a" stroke-width="2"/>${lines}<line x1="${x0}" y1="24" x2="${x0+w}" y2="24" stroke="#555"/><line x1="${x0}" y1="18" x2="${x0}" y2="30" stroke="#555"/><line x1="${x0+w}" y1="18" x2="${x0+w}" y2="30" stroke="#555"/><text x="${x0+w/2}" y="16" font-size="12" text-anchor="middle" fill="#222">${fmt(r.long*1000,0)} mm</text><line x1="50" y1="${y0}" x2="50" y2="${y0+h}" stroke="#555"/><text x="24" y="${y0+h/2}" font-size="12" text-anchor="middle" transform="rotate(-90 24 ${y0+h/2})" fill="#222">${fmt(r.short*1000,0)} mm</text><text x="${x0+w/2}" y="${y0+h+22}" font-size="12" text-anchor="middle" fill="#17649a">${r.n} passadas · ${fmt(r.spacing*100)} cm entre eixos</text><text x="${x0+w/2}" y="${y0+h+40}" font-size="12" text-anchor="middle" fill="#17649a">Recuos simétricos: ${fmt(r.setback*100)} cm</text></svg>`;
+ const x0=72,y0=64,w=292,h=Math.max(110,Math.min(230,r.short/r.long*292)), n=r.n;
+ const groupColors=['#f97316','#1685e5','#16a34a','#9333ea','#dc2626','#0891b2','#a16207'];
+ let lines='', connectors='', sourceLabels='';
+ const groupByPass={};r.sourceGroups.forEach((g,gi)=>g.passIndices.forEach(pi=>groupByPass[pi]={g,gi,color:groupColors[gi%groupColors.length]}));
+ for(let i=0;i<n;i++){
+   const yy=y0+(r.positions[i]/r.short)*h, item=groupByPass[i+1], color=item?item.color:'#17649a';
+   lines+=`<line x1="${x0}" y1="${yy}" x2="${x0+w}" y2="${yy}" stroke="${color}" stroke-width="3"/><text x="${x0-12}" y="${yy+4}" font-size="10" text-anchor="end" fill="#222">${i+1}</text>`;
+   if(item)connectors+=`<path d="M ${x0+w} ${yy} H 354 V ${133+item.gi*54} H 424" fill="none" stroke="${color}" stroke-width="1.6" opacity=".9"/>`;
+ }
+ r.sourceGroups.forEach((g,gi)=>{const yy=132+gi*54, color=groupColors[gi%groupColors.length];sourceLabels+=`<rect x="424" y="${yy-21}" width="218" height="44" rx="7" fill="#fff" stroke="${color}" stroke-width="2"/><circle cx="442" cy="${yy+1}" r="5" fill="${color}"/><text x="533" y="${yy-5}" font-size="12" font-weight="700" text-anchor="middle" fill="${color}">FONTE ${gi+1} · ${g.rating} W</text><text x="533" y="${yy+11}" font-size="10" text-anchor="middle" fill="#222">Passadas ${g.passIndices.join(', ')}</text>`;});
+ const svgHeight=Math.max(y0+h+70, 132+Math.max(1,r.sourceGroups.length)*54);
+ $('drawing').innerHTML=`<h3 class="drawing-title">DIAGRAMA TÉCNICO · DISTRIBUIÇÃO E LATERALIZAÇÃO</h3><svg viewBox="0 0 660 ${svgHeight}" role="img" aria-label="Diagrama técnico da tela, passadas numeradas e fontes laterais agrupadas por cor"><rect x="8" y="8" width="644" height="${svgHeight-16}" rx="10" fill="#fbfdff" stroke="#d7e0e8"/><text x="20" y="31" font-size="12" font-weight="700" fill="#17649a">TELA TENSIONADA · ${fmt(r.long)} × ${fmt(r.short)} m</text><rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="white" stroke="#17649a" stroke-width="1.8"/>${lines}${connectors}${sourceLabels}<line x1="${x0}" y1="47" x2="${x0+w}" y2="47" stroke="#555"/><line x1="${x0}" y1="41" x2="${x0}" y2="53" stroke="#555"/><line x1="${x0+w}" y1="41" x2="${x0+w}" y2="53" stroke="#555"/><text x="${x0+w/2}" y="42" font-size="11" text-anchor="middle" fill="#222">${fmt(r.long,2)} m</text><line x1="52" y1="${y0}" x2="52" y2="${y0+h}" stroke="#555"/><text x="28" y="${y0+h/2}" font-size="11" text-anchor="middle" transform="rotate(-90 28 ${y0+h/2})" fill="#222">${fmt(r.short,2)} m</text><text x="${x0+w/2}" y="${y0+h+24}" font-size="11" text-anchor="middle" fill="#17649a">${r.n} passadas · ${fmt(r.spacing*100)} cm entre eixos</text><text x="${x0+w/2}" y="${y0+h+42}" font-size="11" text-anchor="middle" fill="#17649a">Recuos simétricos: ${fmt(r.setback*100)} cm</text><text x="424" y="92" font-size="11" font-weight="700" fill="#334155">FONTES / CONJUNTOS</text></svg><p class="technical-note">As cores indicam quais passadas foram agrupadas por fonte. A potência mostrada é uma seleção preliminar; confirmar os limites reais da fita, da fonte e dos cabos.</p>`;
  $('positions').innerHTML=`<p>Posições medidas a partir de uma borda: <strong>${r.positions.map(p=>fmt(p*100,1)+' cm').join(' · ')}</strong></p><p class="small">Recuo de cada borda: ${fmt(r.setback*100)} cm. Espaçamento-base: ${fmt(r.spacing*100)} cm.</p>`;
  const rolls=Math.ceil(r.general/r.roll);
  $('tables').innerHTML=`<table><tbody><tr><th>Item</th><th>Resultado</th></tr><tr><td>Fita geral instalada</td><td>${fmt(r.general)} m</td></tr><tr><td>Potência geral</td><td>${fmt(r.general*r.wpm)} W</td></tr><tr><td>Rolos para geral (${fmt(r.roll)} m)</td><td>${rolls}</td></tr><tr><td>Fita periférica</td><td>${r.perim?fmt(r.perim)+' m':'Não incluída'}</td></tr><tr><td>Quantidade total calculada</td><td>${fmt(r.total)} m</td></tr><tr><td>Potência instalada calculada</td><td>${fmt(r.installed)} W</td></tr></tbody></table>`;
- $('sources').innerHTML=r.sourceGroups.length?`<table><thead><tr><th>Grupo candidato</th><th>Passadas</th><th>Carga</th><th>Com reserva</th><th>Fonte candidata</th></tr></thead><tbody>${r.sourceGroups.map((s,i)=>`<tr><td>${i+1}</td><td>${s.count}</td><td>${fmt(s.watts)} W</td><td>${fmt(s.design)} W</td><td>${s.rating} W / ${r.voltage} V</td></tr>`).join('')}</tbody></table><p class="small">Seleção matemática preliminar por grupos de passadas e reserva configurada; não é uma aprovação elétrica.</p>`:`<p>Não foi possível sugerir agrupamento de fontes. Revise os dados e valide as especificações dos equipamentos.</p>`;
+ $('sources').innerHTML=r.sourceGroups.length?`<table><thead><tr><th>Conjunto</th><th>Linhas alimentadas</th><th>Carga real</th><th>Com reserva</th><th>Corrente de projeto</th><th>Fonte candidata</th></tr></thead><tbody>${r.sourceGroups.map((s,i)=>`<tr><td>${i+1}</td><td>${s.passIndices.join(', ')}</td><td>${fmt(s.watts)} W</td><td>${fmt(s.design)} W</td><td>${fmt(s.designCurrent)} A</td><td>${s.rating} W · ${r.voltage} V DC</td></tr>`).join('')}</tbody></table><p class="small">A potência nominal é uma seleção matemática preliminar a partir da fita informada e da reserva. O modelo comercial específico e a compatibilidade dos terminais precisam ser confirmados na ficha técnica da fonte e da fita.</p>`:`<p>Não foi possível sugerir agrupamento de fontes. Revise os dados e valide as especificações dos equipamentos.</p>`;
  $('warnings').innerHTML=`<div class="notice"><strong>Atenção — validação pendente</strong><ul>${r.warnings.map(w=>`<li>${esc(w)}</li>`).join('')}</ul></div>`;
 }
 function save(){
