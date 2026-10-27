@@ -1,13 +1,84 @@
-CÁLCULO DE TELA TENSIONADA — PROTÓTIPO PWA
+CÁLCULO DE TELA TENSIONADA — APLICATIVO UNIFICADO V2
 
-Arquivos:
-- index.html: aplicativo e cálculos
-- manifest.webmanifest: configuração instalável
-- sw.js: cache offline
+FORMATO DA TELA
+- Retangular / quadrada: informe comprimento e largura.
+- Redonda: informe o diâmetro.
 
-IMPORTANTE:
-1. Service workers/PWA normalmente exigem HTTPS ou localhost. Abrir index.html diretamente como arquivo permite testar a interface e cálculos, mas não instala o PWA nem garante o cache offline.
-2. Para instalar no Android/iPhone, publique estes arquivos em hospedagem HTTPS. Abra a URL uma vez com internet, aguarde carregar e use "Adicionar à tela inicial" (iPhone: Compartilhar > Adicionar à Tela de Início; Android: menu do navegador > Instalar/Adicionar à tela inicial).
-3. Projetos são armazenados no localStorage do navegador deste aparelho. Não limpe os dados do navegador sem exportar backup JSON. O histórico não sincroniza automaticamente entre dispositivos.
-4. Versão de teste com diagrama técnico de passadas numeradas, grupos coloridos e fontes lateralizadas. O cálculo geométrico e o dimensionamento de fontes continuam sendo estimativas. Não substituem validação da ficha técnica da fita, fontes, cabos, queda de tensão, proteção elétrica, ventilação e instalação.
-5. A regra geométrica está implementada como distribuição centralizada com espaçamento igual à profundidade, iniciando por uma referência de 5 cm; em telas com dimensões especiais, confirme o critério executivo Lumi Frame.
+REGRAS DE CÁLCULO
+- Espaçamento padrão entre passadas igual à profundidade; também é possível selecionar espaçamento manual.
+- Passadas centralizadas e recuos simétricos. Na tela redonda, cada passada é calculada como uma corda do círculo.
+- Reserva aplicada à potência total antes do agrupamento das fontes.
+- Limite rígido de 250 W nominais por fonte; o aplicativo não sugere fonte maior.
+- Se uma passada individual não couber em fonte de até 250 W com reserva, o aplicativo mostra alerta.
+- Fita periférica é contabilizada na potência geral, mas precisa de dimensionamento de alimentação separado.
+- Pré-dimensionamento: confirmar tensão, corrente, potência contínua, limites de comprimento, queda de tensão, cabos, proteção e instalação na ficha técnica do fabricante.
+
+ARQUIVOS
+- index.html: aplicativo.
+- manifest.webmanifest: configuração instalável.
+- sw.js: cache offline.
+
+PARA TESTAR
+1. Extraia o ZIP.
+2. Abra index.html no Chrome ou Edge.
+3. Selecione Retangular / quadrada ou Redonda.
+4. Preencha as medidas e clique em Calcular projeto.
+
+Esta é uma versão de teste. Ainda não foi publicada no GitHub Pages nem validada em todos os navegadores.
+
+
+NOVA FUNÇÃO V3 — BARRAS MISTERLED LUMINA BACK
+- Seletor entre fita em rolo e barras Lumina Back.
+- Modelos: SLED 9150 (monocromática) e SLED 9151 (Tunable White).
+- Valores de referência informados na página do fabricante: 24 V DC, 12 W por barra, comprimento nominal 96 cm e corte a cada 15 cm.
+- O cálculo conta barras inteiras de 96 cm por passada; pode haver excedente de comprimento. Confirmar a estratégia de corte, conectores e alimentação antes de executar.
+- A potência de projeto inclui 25% de reserva antes do agrupamento; o limite por fonte continua sendo 250 W nominais.
+- O fluxo luminoso não é usado no cálculo para barras nesta versão, porque os valores publicados variam conforme o modelo e precisam ser confirmados na ficha técnica completa.
+
+
+CORREÇÕES V4
+- Barras identificadas como MisterLED Lumina Back.
+- Comprimento de referência configurado em 96 cm por barra.
+- Potência por barra configurada em 12 W; o campo mostra 12 W quando barras são selecionadas.
+- Espaçamento visual no rodapé do diagrama ampliado para evitar sobreposição de textos.
+
+
+V5 — IDENTIFICAÇÃO CORRIGIDA
+- Nome comercial: MisterLED Lumina Back.
+- Modelo SLED 9150: 12 W/barra, 24 V DC, IRC 90, 3000 K e fluxo luminoso 1051 lm conforme informação fornecida pelo usuário.
+- Comprimento de referência definido para o projeto: 96 cm por barra.
+- Reserva de 25% antes do agrupamento; limite máximo de 250 W nominais por fonte.
+
+
+V6 — PRÉVIA PARA CONFERÊNCIA
+- Marca/linha: Mister LED Lumina Back.
+- Modelo SLED 9150: 12 W/barra, 24 V DC, IRC 90, 3000 K, fluxo luminoso 1051 lm por barra (tabela fornecida pelo usuário).
+- Comprimento de referência adotado no cálculo: 96 cm por barra.
+- Campo de fluxo muda para lm/barra ao selecionar barras.
+
+V7: corrigidos nomes visíveis; campo de fluxo alterna entre lm/m (rolo) e lm/barra (barras); fluxo SLED 9150 definido em 1051 lm/barra; potência 12 W/barra e referência de 96 cm.
+
+
+V8 — CORREÇÃO EXPLÍCITA DE CAMPOS
+- Seletor: Barras LED Mister LED Lumina Back (96 cm).
+- Modelo de barra: SLED 9150 — monocromática / SLED 9151 — Tunable White.
+- Ao selecionar barras: potência fixa em 12 W/barra, 24 V DC, fluxo rotulado lm/barra e SLED 9150 = 1051 lm/barra conforme a tabela fornecida.
+- Ao selecionar rolo, retorna ao consumo em W/m e fluxo em lm/m.
+
+
+VERSÃO VISUAL PREMIUM V1
+- Identidade atual preservada com azul-marinho, branco, cinza quente e detalhes bronze.
+- Formulário no topo em grade responsiva.
+- Resultados abaixo, com métricas, diagrama amplo e tabelas mais limpas.
+- Mudanças focadas na apresentação; as regras de cálculo não foram intencionalmente alteradas.
+
+
+VERSÃO PREMIUM V2
+- Removida a expressão “Lumi Frame” do subtítulo do cabeçalho.
+- Mantidos os cálculos, os campos e as regras técnicas da versão Premium anterior.
+
+
+VERSÃO PREMIUM V3 — CORREÇÃO DO COMPRIMENTO DAS BARRAS
+- Comprimento de referência da barra Mister LED Lumina Back atualizado de 96 cm para 95 cm (0,95 m).
+- Atualizado o texto do seletor, os cálculos de quantidade de barras, potência estimada por passada, comprimento total e tabelas de resultados.
+- Cache offline atualizado para garantir que navegadores recebam a versão nova.
